@@ -1,14 +1,16 @@
 import pytest
 from measure import create_app, db
-from measure.models import APIUsageEvent
 from datetime import datetime, timedelta
 import pytz
 from urllib.parse import quote
+
+from measure.models import APIUsageEvent
 
 app = create_app()
 
 @pytest.fixture
 def client():
+    app = create_app()
     app.config["TESTING"] = True
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
     with app.test_client() as client:

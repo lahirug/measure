@@ -20,7 +20,7 @@ def register_routes(app):
                 return jsonify({"error": "Missing required fields"}), 400
 
             timestamp = parse_utc(data["timestamp"])
-            validate_timestamp(timestamp, "timestamp")
+            validate_timestamp(data["timestamp"], "timestamp")
 
             event = APIUsageEvent(account_id=data["account_id"], endpoint=data["endpoint"], timestamp=timestamp)
             db.session.add(event)

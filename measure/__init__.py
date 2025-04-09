@@ -6,6 +6,7 @@ from flask_limiter.util import get_remote_address
 from config import Config
 
 db = SQLAlchemy()
+
 limiter = Limiter(key_func=get_remote_address, default_limits=[], storage_uri="memory://")
 
 def create_app():
