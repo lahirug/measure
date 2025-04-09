@@ -90,3 +90,4 @@ Following are the major TODO to complete this project.
 1. Move the secrets to a secret store and read from there.
 2. Add monitoring and alerting to the api
 3. If required add authentication to call the API.
+4. Nango integration during Rate limit exceeded event

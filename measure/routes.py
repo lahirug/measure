@@ -9,14 +9,19 @@ import logging
 import pytz
 
 
+def call_nango_slack(e):
+    # TODO(lahiru): Integrate with Nango and send a message.
+    logging.error("call_nango_slack invoked")
+    return jsonify(error="Rate limit exceeded. Try again later."), 429
+
+
+limiter._on_breach = call_nango_slack
+
+
 def register_routes(app):
-    @app.route("/")
-    def hello_world():
-        name = request.args.get("NAME", "World")
-        return f"Hello {name}!"
 
     @app.route("/log-event", methods=["POST"])
-    @limiter.limit("50 per second", key_func=get_account_id)
+    @limiter.limit("1 per minute", key_func=get_account_id)
     def log_event():
         try:
             data = request.get_json()

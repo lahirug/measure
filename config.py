@@ -5,8 +5,8 @@ from sqlalchemy.pool import QueuePool
 class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL',
-        # 'postgresql://masurel:masurel@127.0.0.1:5432/measure?connect_timeout=3'
-        'postgresql://measure:measure@xxx:5432/measure?connect_timeout=3'
+        'postgresql://masurel:masurel@127.0.0.1:5432/measure?connect_timeout=3'
+        # 'postgresql://measure:measure@xxx:5432/measure?connect_timeout=3'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
