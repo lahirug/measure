@@ -83,3 +83,10 @@ Example:
 Rate Limit: 10 requests per second per account_id
 
 Let me know if you’d like a section for testing (pytest), Dockerization, or deployment instructions.
+
+
+Following are the major TODO to complete this project.
+
+1. Move the secrets to a secret store and read from there.
+2. Add monitoring and alerting to the api
+3. If required add authentication to call the API.

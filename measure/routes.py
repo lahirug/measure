@@ -1,9 +1,13 @@
+from datetime import datetime
+
 from flask import request, jsonify
 from . import db, limiter
 from .models import APIUsageEvent
 from werkzeug.exceptions import BadRequest
 from .utils import parse_utc, get_account_id, validate_timestamp
 import logging
+import pytz
+
 
 def register_routes(app):
     @app.route("/")
@@ -21,6 +25,9 @@ def register_routes(app):
 
             timestamp = parse_utc(data["timestamp"])
             validate_timestamp(data["timestamp"], "timestamp")
+            if timestamp > datetime.now(pytz.UTC):
+                logging.warning("Timestamp is in the future")
+                return jsonify({"error": "Timestamp cannot be in the future."}), 400
 
             event = APIUsageEvent(account_id=data["account_id"], endpoint=data["endpoint"], timestamp=timestamp)
             db.session.add(event)

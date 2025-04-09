@@ -1,4 +1,8 @@
+from datetime import datetime, timedelta
+
 import pytest
+import pytz
+
 from measure import create_app, db
 
 @pytest.fixture
@@ -44,3 +48,14 @@ def test_usage_invalid_end_format(client):
     response = client.get("/usage?start=2025-04-09T00:00:00Z&end=invalid-end")
     assert response.status_code == 400
     assert "Invalid 'end'" in response.get_data(as_text=True)
+
+def test_log_event_future_timestamp(client):
+    future_timestamp = (datetime.now(pytz.UTC) + timedelta(days=1)).isoformat()
+    payload = {
+        "account_id": "test_acct",
+        "endpoint": "/api/test",
+        "timestamp": future_timestamp
+    }
+    response = client.post("/log-event", json=payload)
+    assert response.status_code == 400
+    assert "Timestamp cannot be in the future" in response.get_data(as_text=True)
