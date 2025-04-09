@@ -60,7 +60,7 @@ curl -X POST http://127.0.0.1:5000/log-event \
 
 {"message":"Event logged"}
 ```
-Rate Limit: 10 requests per second per account_id
+Rate Limit: 50 requests per second per account_id
 
 GET /usage
 Query usage data.
@@ -80,7 +80,7 @@ Example:
 
 ```GET /usage?account_id=acct_123&start=2025-04-01T00:00:00Z&end=2025-04-09T23:59:59Z```
 
-Rate Limit: 10 requests per second per account_id
+Rate Limit: 50 requests per second per account_id
 
 Let me know if you’d like a section for testing (pytest), Dockerization, or deployment instructions.
 

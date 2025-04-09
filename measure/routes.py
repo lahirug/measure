@@ -16,7 +16,7 @@ def register_routes(app):
         return f"Hello {name}!"
 
     @app.route("/log-event", methods=["POST"])
-    @limiter.limit("10 per second", key_func=get_account_id)
+    @limiter.limit("50 per second", key_func=get_account_id)
     def log_event():
         try:
             data = request.get_json()
@@ -40,7 +40,7 @@ def register_routes(app):
             return jsonify({"error": "Internal server error"}), 500
 
     @app.route("/usage", methods=["GET"])
-    @limiter.limit("10 per second", key_func=get_account_id)
+    @limiter.limit("50 per second", key_func=get_account_id)
     def usage():
         try:
             account_id = request.args.get("account_id")
