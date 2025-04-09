@@ -23,6 +23,33 @@ def register_routes(app):
     @app.route("/log-event", methods=["POST"])
     @limiter.limit("1 per minute", key_func=get_account_id)
     def log_event():
+        """
+            Logs an API usage event. The event includes the account ID, the endpoint accessed, and the timestamp.
+
+            **Request Body**:
+            - `account_id` (string): The account ID associated with the API call (required).
+            - `endpoint` (string): The API endpoint being accessed (required).
+            - `timestamp` (string, ISO 8601): The timestamp of the event (required).
+
+            **Response**:
+            - If successful: Returns a message confirming the event was logged.
+            - If there are missing fields or invalid timestamp format: Returns a 400 error with an error message.
+            - If timestamp is in the future: Returns a 400 error with a message indicating the timestamp cannot be in the future.
+            - If there’s an internal server error: Returns a 500 error.
+
+            **Example**:
+            ```
+            {
+                "account_id": "acct_1",
+                "endpoint": "/api/v1/feature",
+                "timestamp": "2025-04-09T12:34:56.789123+00:00"
+            }
+            ```
+
+            **Error Handling**:
+            - 400 Bad Request: Missing required fields or invalid timestamp format.
+            - 500 Internal Server Error: When an unexpected error occurs while processing the request.
+        """
         try:
             data = request.get_json()
             if not all(k in data for k in ["account_id", "endpoint", "timestamp"]):
@@ -47,6 +74,30 @@ def register_routes(app):
     @app.route("/usage", methods=["GET"])
     @limiter.limit("50 per second", key_func=get_account_id)
     def usage():
+        """
+            Queries the API usage data for a given account and endpoint, filtered by a time range (start and end).
+
+            **Query Parameters**:
+            - `account_id` (string, optional): The account ID for filtering events (optional).
+            - `endpoint` (string, optional): The API endpoint for filtering events (optional).
+            - `start` (string, ISO 8601, required): The start time for the time range (required).
+            - `end` (string, ISO 8601, required): The end time for the time range (required).
+            
+            **Response**:
+            - Returns a list of events matching the query criteria, including account_id, endpoint, and timestamp.
+            - If `start` or `end` is missing: Returns a 400 error with a message indicating that both are required.
+            - If `start` or `end` timestamp format is invalid: Returns a 400 error with a message indicating the invalid timestamp format.
+            - If there’s an internal server error: Returns a 500 error.
+
+            **Example**:
+            ```
+            GET /usage?start=2025-04-08T00:00:00Z&end=2025-04-09T00:00:00Z&account_id=acct_1
+            ```
+
+            **Error Handling**:
+            - 400 Bad Request: Missing `start` or `end` parameters or invalid timestamp format.
+            - 500 Internal Server Error: When an unexpected error occurs while processing the request.
+        """
         try:
             account_id = request.args.get("account_id")
             endpoint = request.args.get("endpoint")
