@@ -1,8 +1,11 @@
 import pytest
-from main import app, db, APIUsageEvent
+from measure import create_app, db
+from measure.models import APIUsageEvent
 from datetime import datetime, timedelta
 import pytz
 from urllib.parse import quote
+
+app = create_app()
 
 @pytest.fixture
 def client():
